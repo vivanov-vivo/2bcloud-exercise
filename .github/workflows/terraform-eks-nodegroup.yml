@@ -1,0 +1,102 @@
+name:  Terraform EKS Creation
+on:
+## uncomment the following to run the workflow on commit
+  # pull_request:
+  #   branches:
+  #     - master
+  #   paths:
+  #     - 'terraform/eks_nodegroup/**'
+  #     - '.github/workflows/terraform-eks-nodegroup.yml'
+      
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Specify the Terraform action: apply or destroy"
+        required: true
+        default: "apply"
+
+env:
+  AWS_ACCESS_KEY_ID      : ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY  : ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+  AWS_DEFAULT_REGION     : "eu-north-1"
+  AWS_REGION_NAME        : "eu-north-1"
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform/eks-nodegroup
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+        aws-region           :  ${{ env.AWS_REGION_NAME }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: true
+        
+    - name: Validate Terraform
+      run: terraform fmt
+      
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Validate Terraform
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan
+      
+    - name: Print Happy Message for terraform finish
+      run : echo "terraform plan job  Finished successfully!"
+      
+  terraform-deploy:
+    name: Terraform Deploy
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform/eks-nodegroup
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+        aws-region           :  ${{ env.AWS_REGION_NAME }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_wrapper: true
+        
+    - name: Validate Terraform
+      run: terraform fmt
+      
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Validate Terraform
+      run: terraform validate
+
+    - name: Execute Terraform Action
+      run: |
+        if [ "${{ github.event.inputs.action }}" == "destroy" ]; then
+          terraform destroy -auto-approve
+        else
+          terraform apply -auto-approve
+        fi
+    - name: Print Success Message for terraform deploy finish
+      run : echo "Terraform  deployment job  Finished SUCCESSFULLY!"
