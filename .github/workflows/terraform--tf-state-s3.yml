@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Go to terraform dir
       run: |
         cd terraform/tf-state-s3
@@ -30,8 +30,8 @@ jobs:
     - name: Configure my AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
-        aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+        aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
         aws-region           :  ${{ env.AWS_REGION_NAME }}
     - name: Terraform Init
       run: |
@@ -56,8 +56,8 @@ jobs:
       - name: Configure my AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
-          aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+          aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
+          aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
           aws-region           :  ${{ env.AWS_REGION_NAME }}
       - name: Terraform Init
         run: |
