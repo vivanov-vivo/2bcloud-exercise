@@ -1,0 +1,78 @@
+# ------------------------------------------------------------- 
+# create Terraform S3 remote state and dynamoDB table for locks
+#
+#
+#--------------------------------------------------------------
+
+name: Terraform  tf-state-s3 Creation
+env: 
+  AWS_REGION_NAME            : "eu-north-1"
+  TF_ACTIONS_WORKING_DIR     : "terraform/tf-state-s3"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-plan:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Go to terraform dir
+      run: |
+        cd terraform/tf-state-s3
+        ls -la
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.1.7  # Replace with the version of Terraform you want to use
+    - name: Configure my AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+        aws-region           :  ${{ env.AWS_REGION_NAME }}
+    - name: Terraform Init
+      run: |
+        cd terraform/tf-state-s3
+        ls -la
+        terraform init
+        terraform fmt
+        terraform plan -out=tfplan
+
+     # terraform plan -var='example_api_key=${{ secrets.EXAMPLE_API_KEY }}'
+  terraform-deploy:
+    name: Terraform Deploy
+    needs: terraform-plan
+    # if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.1.7  # Replace with the version of Terraform you want to use
+      - name: Configure my AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id    :  ${{ secrets.DEVELEAP_AWS_ACCESS_KEY }}
+          aws-secret-access-key:  ${{ secrets.DEVELEAP_AWS_SECRET_KEY }}
+          aws-region           :  ${{ env.AWS_REGION_NAME }}
+      - name: Terraform Init
+        run: |
+          cd terraform/tf-state-s3
+          ls -la
+          terraform init
+          terraform fmt
+          terraform apply --auto-approve=true
+    # # Step 6: Terraform Apply
+    #   - name: Terraform Apply
+    #     run: terraform apply -auto-approve tfplan
+
+      - name: Print Happy Message for terraform finish
+        run : echo "terraform job  Finished successfully!"
+
+
+      
+      
