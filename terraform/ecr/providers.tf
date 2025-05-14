@@ -10,3 +10,9 @@ terraform {
 provider "aws" {
   region  = "eu-north-1"
 }
+ backend "s3" {
+    bucket  = "2bcloud-tf-states"
+    key     = "ecr/terraform.tfstate"
+    region  = "eu-north-1"
+    dynamodb_table = "2bcloud-tf-locks"
+    }
