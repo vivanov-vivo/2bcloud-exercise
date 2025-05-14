@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: terraform/eks-nodegroup
+        working-directory: terraform/eks-flask-app
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
