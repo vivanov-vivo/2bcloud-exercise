@@ -11,7 +11,7 @@ terraform {
   }
   backend "s3" {
     bucket  = "2bcloud-tf-states"
-    key     = "eks/terraform.tfstate"
+    key     = "flask-eks/terraform.tfstate"
     region  = "eu-north-1"
     dynamodb_table = "2bcloud-tf-locks"
     }
