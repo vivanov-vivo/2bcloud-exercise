@@ -11,8 +11,7 @@ module "eks" {
   create_kms_key = false
   cluster_encryption_config = {}
 
-  #manage_aws_auth_configmap = false
-  cloudwatch_log_group_tags = {}
+#  cloudwatch_log_group_tags = {}
 
   access_entries = {
     # One access entry with a policy associated
