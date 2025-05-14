@@ -7,7 +7,23 @@ module "eks" {
   cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
   create_iam_role = false
-  cluster_iam_role_arn = "arn:aws:iam::633154839293:role/devops-cluster-role"
+  access_entries = {
+    # One access entry with a policy associated
+    example = {
+      principal_arn = "arn:aws:iam::633154839293:role/flask-eks-cluster-role"
+
+      policy_associations = {
+        example = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+          access_scope = {
+            namespaces = ["default"]
+            type       = "namespace"
+          }
+        }
+      }
+    }
+  }
+  #cluster_iam_role_arn = "arn:aws:iam::633154839293:role/devops-cluster-role"
  
   cluster_upgrade_policy = {
     support_type = "STANDARD"
