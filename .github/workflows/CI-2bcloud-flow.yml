@@ -1,0 +1,94 @@
+name: CI 2BCloud Pipeline with Docker 
+
+on:
+## uncomment the following to run the workflow on commit
+  # push:
+  #   branches:
+  #     - master       # Trigger the pipeline on changes to the 'master' branch
+  #   paths:
+  #     - '.github/workflows/CI-2bcloud-flow.yml'
+  #     - 'webapp/**'             # Trigger only if files in the 'webapp' directory change
+
+  workflow_dispatch:
+env:
+  AWS_ACCESS_KEY_ID      : ${{ secrets.VI_AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
+  AWS_DEFAULT_REGION     : "eu-north-1"
+  AWS_REGION_NAME        : "eu-north-1"
+  2BCLOUD_ECR           : ${{ secrets.2BCLOUD_AWS_ECR_REGISTRY }}
+  IMAGE_TAG              : ${{ github.sha }}
+jobs:
+  build-docker-image:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: webapp/
+    steps:
+    
+    # Set Short Commit git Commit SHA
+    - name: Set short git commit SHA
+      id: commit
+      uses: prompt/actions-commit-hash@v2
+      
+    # Checkout the code from the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Configure AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
+        aws-region           :  ${{ env.AWS_REGION_NAME }}
+
+      
+    # For AWS ECR login 
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        mask-password: 'false'
+        
+    # Docker step
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:       
+        IMAGE_TAG: ${{ steps.commit.outputs.short }}
+      run: |
+          docker build -t hello-flask-app .
+          echo "================================="
+          echo "                                 "
+          echo "checking docker image exist      "
+          echo "                                 "
+          docker image ls
+          echo "                                 "
+          echo "================================="
+          docker tag hello-flask-app:latest $2BCLOUD_ECR:hello-flask-app_$IMAGE_TAG
+          echo "================================="
+          echo "                                 "
+          echo "checking docker image exist      "
+          echo "                                 "
+          docker image ls
+          echo "                                 "
+          echo "================================="
+          docker push $2BCLOUD_ECR:hello-flask-app_$IMAGE_TAG
+
+    - name: Output short commit SHA
+      env:       
+        IMAGE_TAG: ${{ steps.commit.outputs.short }}
+      run: |
+        echo "::set-output name=short_sha::$IMAGE_TAG"  # Set the short SHA as output
+        echo "==================================="
+        echo "                                   "
+        echo "   Short commit SHA: $IMAGE_TAG    "
+        echo "                                   "
+        echo "==================================="
+          
+    - name: Print Success Message for Docker build job finish
+      run : |
+        echo "========================================"
+        echo "                                        "
+        echo "CI job   Finished SUCCESSFULLY!         "
+        echo "                                        "
+        echo "========================================"
