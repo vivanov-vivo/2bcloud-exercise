@@ -1,3 +1,7 @@
+# ------------------------------
+# VPC + Networking
+# ------------------------------
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
   name = "flask-eks-vpc"
