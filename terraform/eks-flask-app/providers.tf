@@ -1,7 +1,7 @@
 provider "aws" {
-  region = var.region
-  
+  region = var.region  
 }
+
 terraform {
   required_providers {
     helm = {
