@@ -65,10 +65,10 @@ data "aws_eks_cluster_auth" "cluster" {
 # ------------------------------
 # Deploy Flask App
 # ------------------------------
-resource "kubernetes_manifest" "flask_deployment" {
-  manifest = yamldecode(file("${path.module}/k8s/deployment.yaml"))
-}
+#resource "kubernetes_manifest" "flask_deployment" {
+#  manifest = yamldecode(file("${path.module}/k8s/deployment.yaml"))
+#}
 
-resource "kubernetes_manifest" "flask_service" {
-  manifest = yamldecode(file("${path.module}/k8s/service.yaml"))
-}
+#resource "kubernetes_manifest" "flask_service" {
+#  manifest = yamldecode(file("${path.module}/k8s/service.yaml"))
+#}
