@@ -1,24 +1,6 @@
 # ------------------------------
 # VPC + Networking
 # ------------------------------
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "5.1.1"
-
-  name = "eks-vpc"
-  cidr = "10.0.0.0/16"
-
-  azs             = ["${var.region}a", "${var.region}b"]
-  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-
-  tags = {
-    Created = "by Terraform"
-    Name = "eks-vpc"
-  }
-}
 
 # ------------------------------
 # EKS Cluster
@@ -40,8 +22,9 @@ module "eks" {
   }
 
   tags = {
-    Created = "by Terraform"
-    env = "dev"
+    Created = "by VI terraform"
+    Environment = "dev"
+    Project = "2bcloud" 
   }
 }
 
