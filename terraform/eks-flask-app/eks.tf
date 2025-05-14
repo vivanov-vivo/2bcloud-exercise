@@ -8,8 +8,8 @@ module "eks" {
   cluster_version = "1.32"
   create_iam_role = false
   create_kms_key = false
-  #encryption_config  = {}
   cluster_encryption_config = {}
+  #encryption_config  = {}
 
   access_entries = {
     # One access entry with a policy associated
