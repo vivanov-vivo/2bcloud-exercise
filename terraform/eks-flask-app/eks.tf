@@ -4,18 +4,38 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster_name
-  cluster_version = "1.28"
+  cluster_version = "1.32"
+  bootstrap_self_managed_addons = true
+  cluster_upgrade_policy = {
+    support_type = "STANDARD"
+  }
   subnet_ids      = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
 
   eks_managed_node_groups = {
     default = {
-      desired_size = 1
-      max_size     = 1
+      desired_size = 2
+      max_size     = 4
       min_size     = 1
       instance_types = ["t3.small"]
+      capacity_type  = "ON_DEMAND"
     }
   }
+  cluster_addons = {
+    eks-pod-identity-agent = {}
+    kube-proxy             = {}
+    vpc-cni                = {}
+  }
+
+  # Optional: Cluster endpoint configuration (Private access for better security)
+  cluster_endpoint_public_access = true  # For enhanced security, disable public access
+  cluster_endpoint_private_access = true
+
+  # Optional: Adds the current caller identity as an administrator via cluster access entry
+  enable_cluster_creator_admin_permissions = true
+  
+  # Enable IRSA for IAM roles for service accounts
+  enable_irsa = true
 
   tags = {
     Created = "by VI terraform"
@@ -24,30 +44,3 @@ module "eks" {
   }
 }
 
-# ------------------------------
-# Kubernetes Provider
-# ------------------------------
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-}
-
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_name
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_name
-}
-
-# ------------------------------
-# Deploy Flask App
-# ------------------------------
-#resource "kubernetes_manifest" "flask_deployment" {
-#  manifest = yamldecode(file("${path.module}/k8s/deployment.yaml"))
-#}
-
-#resource "kubernetes_manifest" "flask_service" {
-#  manifest = yamldecode(file("${path.module}/k8s/service.yaml"))
-#}
