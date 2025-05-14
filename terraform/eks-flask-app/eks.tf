@@ -3,7 +3,7 @@
 # ------------------------------
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = var.cluster_name
+  cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
   bootstrap_self_managed_addons = true
   cluster_upgrade_policy = {
