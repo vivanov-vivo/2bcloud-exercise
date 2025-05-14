@@ -40,11 +40,12 @@ module "eks" {
     }
   }
   cluster_addons = {
+    coredns = {}
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni                = {}
   }
-  enable_cluster_log_types = []
+  #enable_cluster_log_types = []
   # Optional: Cluster endpoint configuration (Private access for better security)
   cluster_endpoint_public_access = true  # For enhanced security, disable public access
   cluster_endpoint_private_access = true
