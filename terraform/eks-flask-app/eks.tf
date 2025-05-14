@@ -3,7 +3,7 @@
 # ------------------------------
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  version = ">=20.0"
+  version = "20.8.4"
   cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
   create_iam_role = false
