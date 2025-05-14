@@ -54,7 +54,7 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan
-      run: terraform plan
+      run: TF_LOG=DEBUG terraform plan
       
     - name: Print Happy Message for terraform finish
       run : echo "terraform plan job  Finished successfully!"
