@@ -33,7 +33,7 @@ jobs:
         aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
         aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
         aws-region           :  ${{ env.AWS_REGION_NAME }}
-    - name: Terraform Init
+    - name: Terraform Actions
       run: |
         cd terraform/tf-state-s3
         ls -la
@@ -48,7 +48,7 @@ jobs:
     # if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -59,17 +59,13 @@ jobs:
           aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
           aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
           aws-region           :  ${{ env.AWS_REGION_NAME }}
-      - name: Terraform Init
+      - name: Terraform Actions
         run: |
           cd terraform/tf-state-s3
           ls -la
           terraform init
           terraform fmt
           terraform apply --auto-approve=true
-    # # Step 6: Terraform Apply
-    #   - name: Terraform Apply
-    #     run: terraform apply -auto-approve tfplan
-
       - name: Print Happy Message for terraform finish
         run : echo "terraform job  Finished successfully!"
 
