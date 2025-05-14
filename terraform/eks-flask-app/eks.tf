@@ -5,7 +5,9 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
-  bootstrap_self_managed_addons = true
+  create_iam_role = false
+  cluster_iam_role_arn = "arn:aws:iam::633154839293:role/devops-cluster-role"
+ 
   cluster_upgrade_policy = {
     support_type = "STANDARD"
   }
@@ -14,10 +16,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      desired_size = 2
-      max_size     = 4
-      min_size     = 1
-      instance_types = ["t3.small"]
+      create_iam_role      = false
+      iam_role_arn         = "arn:aws:iam::633154839293:role/devops-node-role"
+      instance_types       = ["t3.medium"]
       capacity_type  = "ON_DEMAND"
     }
   }
@@ -26,7 +27,7 @@ module "eks" {
     kube-proxy             = {}
     vpc-cni                = {}
   }
-
+  enable_cluster_log_types = []
   # Optional: Cluster endpoint configuration (Private access for better security)
   cluster_endpoint_public_access = true  # For enhanced security, disable public access
   cluster_endpoint_private_access = true
