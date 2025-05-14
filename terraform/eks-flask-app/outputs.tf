@@ -10,6 +10,6 @@ output "eks_cluster_kubeconfig" {
   value = module.eks.kubeconfig
 }
 
-output "flask_service_url" {
-  value = "http://${kubernetes_manifest.flask_service.manifest.status.loadBalancer.ingress[0].hostname}"
-}
+#output "flask_service_url" {
+#  value = "http://${kubernetes_manifest.flask_service.manifest.status.loadBalancer.ingress[0].hostname}"
+#}
