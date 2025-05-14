@@ -10,9 +10,9 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "2bcloud-terraform-states"
-    key     = "eks/tfstates3.tfstate"
+    bucket  = "2bcloud-tf-states"
+    key     = "eks/terraform.tfstate"
     region  = "eu-north-1"
-    dynamodb_table = "2bcloud-terraform-locks"
+    dynamodb_table = "2bcloud-tf-locks"
     }
 }
