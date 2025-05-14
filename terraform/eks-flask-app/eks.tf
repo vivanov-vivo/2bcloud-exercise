@@ -6,7 +6,9 @@ module "eks" {
   version = "~> 20.0"
   cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
-  create_iam_role = true
+  #create_iam_role = true
+  cluster_role_arn = "arn:aws:iam::633154839293:role/flask-eks-cluster-role"
+
   #create_kms_key = false
   cluster_encryption_config = {}
   #encryption_config  = {}
