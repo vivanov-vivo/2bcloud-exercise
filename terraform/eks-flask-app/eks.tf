@@ -10,6 +10,8 @@ module "eks" {
   iam_role_arn = "arn:aws:iam::633154839293:role/devops-cluster-role"
   create_kms_key = false
   cluster_encryption_config = {}
+  create_cloudwatch_log_group = false
+
 
 #  cloudwatch_log_group_tags = {}
 
