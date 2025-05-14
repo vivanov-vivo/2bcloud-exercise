@@ -1,5 +1,7 @@
 tags = {
-  "Environment" = "Dev"
+    Created = "by VI terraform"
+    Environment = "dev"
+    Project = "2bcloud" 
 }
 
 ecr_name = [
