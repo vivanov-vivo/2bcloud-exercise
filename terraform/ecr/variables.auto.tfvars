@@ -1,4 +1,4 @@
-lotags = {
+tags = {
     Created = "by VI terraform"
     Environment = "dev"
     Project = "2bcloud" 
