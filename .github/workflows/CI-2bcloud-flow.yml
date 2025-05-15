@@ -6,7 +6,7 @@ on:
     branches:
       - master       # Trigger the pipeline on changes to the 'master' branch
     paths:
-      # - '.github/workflows/CI-2bcloud-flow.yml'
+      - '.github/workflows/CI-2bcloud-flow.yml'
       - 'webapp/**'             # Trigger only if files in the 'webapp' directory change
 
   workflow_dispatch:
@@ -56,7 +56,8 @@ jobs:
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
-          docker build -t hello-flask-app .
+          docker build -t $ECR:hello-flask-app_latest -t $ECR:hello-flask-app_$IMAGE_TAG .
+          
           echo "================================="
           echo "                                 "
           echo "checking docker image exist      "
@@ -64,15 +65,9 @@ jobs:
           docker image ls
           echo "                                 "
           echo "================================="
-          docker tag hello-flask-app:latest $ECR:hello-flask-app_$IMAGE_TAG
-          echo "================================="
-          echo "                                 "
-          echo "checking docker image exist      "
-          echo "                                 "
-          docker image ls
-          echo "                                 "
-          echo "================================="
-          docker push $ECR:hello-flask-app_$IMAGE_TAG
+          
+          docker push $ECR:hello-flask-app_$IMAGE_TAG 
+          docker push $ECR:hello-flask-app_latest
 
     - name: Output short commit SHA
       env:       
