@@ -82,20 +82,54 @@ jobs:
         IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         REPO     : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
       run: |
-         sed -i "s|latest|$IMAGE_TAG|g" helm-chart/hello-flask-app/values.yaml
-         sed -i "s|2bcloudrepository|$REPO|g" helm-chart/hello-flask-app/values.yaml
+         sed -i "s|latest|$IMAGE_TAG|g" helm-charts/hello-flask-app/values.yaml
+         sed -i "s|2bcloudrepository|$REPO|g" helm-charts/hello-flask-app/values.yaml
          
 
    # Validate the Helm chart before deployment
     - name: Validate Helm chart (lint)
       run: |
-        helm lint ./helm-chart/hello-flask-app
+        helm lint ./helm-charts/hello-flask-app
         
     # Deploy hello-flask-app helm chart
     - name: Deploy helm chart
       uses: WyriHaximus/github-action-helm3@v3
       with:
-        exec: helm upgrade --install hello-flask-app helm-chart/hello-flask-app/ --cleanup-on-fail --namespace hello-flask-app --wait
+        exec: helm upgrade --install hello-flask-app helm-charts/hello-flask-app/ --cleanup-on-fail --namespace hello-flask-app --wait
+
+    - name: Wait for service external IP
+      id: wait-for-service
+      run: |
+        echo "Waiting for external IP..."
+        for i in {1..20}; do
+          EXTERNAL_IP=$(kubectl get svc hello-flask-app -n hello-flask-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          if [[ -n "$EXTERNAL_IP" ]]; then
+            echo "Found IP: $EXTERNAL_IP"
+            echo "external_ip=$EXTERNAL_IP" >> $GITHUB_OUTPUT
+            break
+          fi
+          echo "Still waiting..."
+          sleep 15
+        done
+        if [[ -z "$EXTERNAL_IP" ]]; then
+          echo "Timed out waiting for service external IP"
+          exit 1
+        fi
+
+    - name: Check health endpoint
+      run: |
+        echo "Checking /healthz on http://${{ steps.wait-for-service.outputs.external_ip }}:5000"
+        for i in {1..10}; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://${{ steps.wait-for-service.outputs.external_ip }}:5000/healthz || true)
+          echo "Health check status: $STATUS"
+          if [[ "$STATUS" == "200" ]]; then
+            echo "App is healthy!"
+            exit 0
+          fi
+          sleep 10
+        done
+        echo "App failed health check!"
+        exit 1
 
     - name: Print Success Message for Deploy hello-flask-app
       run : echo "Deployment hello-flask-app to 2bcloud EKS with helm   FINISHED SUCCESSFULLY!"
