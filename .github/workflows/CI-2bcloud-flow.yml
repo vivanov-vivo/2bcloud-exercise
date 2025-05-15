@@ -15,7 +15,7 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
-  2BCLOUD_ECR           : ${{ secrets.2BCLOUD_AWS_ECR_REGISTRY }}
+  ECR           : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
   IMAGE_TAG              : ${{ github.sha }}
 jobs:
   build-docker-image:
@@ -64,7 +64,7 @@ jobs:
           docker image ls
           echo "                                 "
           echo "================================="
-          docker tag hello-flask-app:latest $2BCLOUD_ECR:hello-flask-app_$IMAGE_TAG
+          docker tag hello-flask-app:latest $ECR:hello-flask-app_$IMAGE_TAG
           echo "================================="
           echo "                                 "
           echo "checking docker image exist      "
@@ -72,7 +72,7 @@ jobs:
           docker image ls
           echo "                                 "
           echo "================================="
-          docker push $2BCLOUD_ECR:hello-flask-app_$IMAGE_TAG
+          docker push $ECR:hello-flask-app_$IMAGE_TAG
 
     - name: Output short commit SHA
       env:       
