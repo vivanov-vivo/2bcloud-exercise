@@ -56,6 +56,8 @@ jobs:
     - name: Build, tag, and push docker image to Amazon ECR
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
+        ECR      : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
+        APP_NAME : "hello-flask-app"
       run: |
           echo $ECR:$APP_NAME_latest
           echo $ECR:$APP_NAME_$IMAGE_TAG 
