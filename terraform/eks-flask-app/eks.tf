@@ -41,7 +41,7 @@ module "eks" {
   eks_managed_node_groups = {
     default = {
       create_iam_role      = false
-      iam_role_arn         = "arn:aws:iam::633154839293:role/vi-eks-nodegroup-role"
+      iam_role_arn         = "arn:aws:iam::633154839293:role/AmazonEKSNodeRole"
       instance_types       = ["t3.medium"]
       capacity_type  = "ON_DEMAND"
     }
