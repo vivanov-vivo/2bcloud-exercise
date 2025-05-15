@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "ecr" {
-  name                 = var.ecr-name
+  name                 = var.ecr-name[0]
   image_tag_mutability = var.image_mutability
   encryption_configuration {
     encryption_type = var.encrypt_type
