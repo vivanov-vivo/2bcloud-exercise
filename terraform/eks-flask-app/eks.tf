@@ -7,7 +7,7 @@ module "eks" {
   cluster_name    = "flask-eks-cluster"
   cluster_version = "1.32"
   create_iam_role = false
-  iam_role_arn = "arn:aws:iam::633154839293:role/devops-cluster-role"
+  iam_role_arn = "arn:aws:iam::633154839293:role/vi-eks-cluster-role"
   create_kms_key = false
   cluster_encryption_config = {}
   create_cloudwatch_log_group = false
@@ -41,7 +41,7 @@ module "eks" {
   eks_managed_node_groups = {
     default = {
       create_iam_role      = false
-      iam_role_arn         = "arn:aws:iam::633154839293:role/devops-node-role"
+      iam_role_arn         = "arn:aws:iam::633154839293:role/vi-eks-nodegroup-role"
       instance_types       = ["t3.medium"]
       capacity_type  = "ON_DEMAND"
     }
