@@ -2,12 +2,12 @@
 name: CI Flow Create Docker image
 on:
 ## uncomment the following to run the workflow on commit
-  # push:
-  #   branches:
-  #     - master       # Trigger the pipeline on changes to the 'master' branch
-  #   paths:
-  #     - '.github/workflows/CI-2bcloud-flow.yml'
-  #     - 'webapp/**'             # Trigger only if files in the 'webapp' directory change
+  push:
+    branches:
+      - master       # Trigger the pipeline on changes to the 'master' branch
+    paths:
+      # - '.github/workflows/CI-2bcloud-flow.yml'
+      - 'webapp/**'             # Trigger only if files in the 'webapp' directory change
 
   workflow_dispatch:
 env:
