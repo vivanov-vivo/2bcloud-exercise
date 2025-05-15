@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: <your-aws-account-id>.dkr.ecr.<region>.amazonaws.com/hello-flask-app
+  repository: 2bcloudrepository/hello-flask-app
   tag: latest
   pullPolicy: IfNotPresent
 
