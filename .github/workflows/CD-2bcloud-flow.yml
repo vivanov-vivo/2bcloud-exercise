@@ -1,9 +1,10 @@
-name: CD - hello-flask-app Deployment to 2bcloud EKS 
+#  CD Flow - hello-flask-app Deployment to 2bcloud EKS 
+name: CD Flow Deployment hello-flask-app to EKS 
 
 on:
   # uncomment the following sectin in case you want automatically deployment after CI workflow
    # workflow_run:
-   #  workflows: ["CI  Pipeline with Docker"]  # Name of the CI workflow
+   #  workflows: ["CI Flow Create Docker image"]  # Name of the CI workflow
    #  types:
    #    - completed  # Trigger CD when CI completes
       
