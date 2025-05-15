@@ -61,7 +61,7 @@ jobs:
       run: |
           echo $ECR:$APP_NAME_latest
           echo $ECR:$APP_NAME_$IMAGE_TAG 
-          docker build -t $ECR:$APP_NAME_latest -t $ECR:$APP_NAME_$IMAGE_TAG .
+          docker build -t $ECR:hello-flask-app_latest -t $ECR:hello-flask-app_$IMAGE_TAG .
           
           echo "================================="
           echo "                                 "
@@ -71,8 +71,8 @@ jobs:
           echo "                                 "
           echo "================================="
           
-          docker push $ECR:$APP_NAME_$IMAGE_TAG 
-          docker push $ECR:$APP_NAME_latest
+          docker push $ECR:hello-flask-app_$IMAGE_TAG 
+          docker push $ECR:hello-flask-app_latest
 
     - name: Output short commit SHA
       env:       
