@@ -1,0 +1,102 @@
+name: CD - hello-flask-app Deployment to 2bcloud EKS 
+
+on:
+  # uncomment the following sectin in case you want automatically deployment after CI workflow
+   # workflow_run:
+   #  workflows: ["CI  Pipeline with Docker"]  # Name of the CI workflow
+   #  types:
+   #    - completed  # Trigger CD when CI completes
+      
+   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Commit SHA (image tag) from 'CI Develeap Pipeline with Docker'  :"
+        required: true
+        default: ""
+        
+env:
+  AWS_ACCESS_KEY_ID      : ${{ secrets.VI_AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
+  AWS_DEFAULT_REGION     : "eu-north-1"
+  AWS_REGION_NAME        : "eu-north-1"
+  DEVELEAP_ECR           : ${{ secrets.2BCLOUD_AWS_ECR_REGISTRY }}
+  # IMAGE_TAG              : ${{ github.sha }}
+jobs:
+  
+  build:
+    
+    name: Deployment
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check for Commit SHA input
+      id: check_sha
+      run: |
+        if [ -z "${{ github.event.inputs.image_tag }}" ]; then
+          echo "Error: Commit SHA (image_tag)is required as input!, please take it from CI workflow"  # Fail the job if no input is provided
+          exit 1
+        fi
+
+        echo "Using Commit SHA: ${{ github.event.inputs.image_tag }}"
+
+    # Set Short Commit git Commit SHA
+    - name: Set short git commit SHA
+      id: commit
+      uses: prompt/actions-commit-hash@v2
+          
+    
+    # Checkout the code from the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Configure AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id    :  ${{ secrets.VI_AWS_ACCESS_KEY }}
+        aws-secret-access-key:  ${{ secrets.VI_AWS_SECRET_KEY }}
+        aws-region           :  ${{ env.AWS_REGION_NAME }}
+
+      
+    # For AWS ECR login 
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        mask-password: 'false'
+ 
+   
+    # Update .kube/config file with cluster details
+    - name: Update kube config
+      run: aws eks update-kubeconfig --name ${{ secrets.2BCLOUD_EKS_NAME }} --region $AWS_REGION
+      
+    # Create Namespace if it doesn't exist and delete old deployment
+    - name: Create Namespace if it doesn't exist
+      run: |
+        kubectl get namespace hello-flask-app || kubectl create namespace hello-flask-app
+        kubectl delete deployment hello-flask-app -n hello-flask-app --ignore-not-found
+
+    # Update Image tag in values file
+    - name: Update values.yaml with real Image 
+      env:
+        IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        REPO     : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
+      run: |
+         sed -i "s|latest|$IMAGE_TAG|g" helm-chart/hello-flask-app/values.yaml
+         sed -i "s|2bcloudrepository|$REPO|g" helm-chart/hello-flask-app/values.yaml
+         
+
+   # Validate the Helm chart before deployment
+    - name: Validate Helm chart (lint)
+      run: |
+        helm lint ./helm-chart/hello-flask-app
+        
+    # Deploy hello-flask-app helm chart
+    - name: Deploy helm chart
+      uses: WyriHaximus/github-action-helm3@v3
+      with:
+        exec: helm upgrade --install hello-flask-app helm-chart/hello-flask-app/ --cleanup-on-fail --namespace hello-flask-app --wait
+
+    - name: Print Success Message for Deploy hello-flask-app to Develeap EKS  job finish
+      run : echo "Deployment hello-flask-app to 2bcloud EKS with helm   FINISHED SUCCESSFULLY!"
+      
