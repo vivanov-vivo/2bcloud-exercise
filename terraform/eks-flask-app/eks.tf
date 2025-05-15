@@ -62,7 +62,7 @@ module "eks" {
   enable_cluster_creator_admin_permissions = true
   
   # Enable IRSA for IAM roles for service accounts
-  enable_irsa = true
+  #enable_irsa = true
 
   tags = {
     Created = "by VI terraform"
