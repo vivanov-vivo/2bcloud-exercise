@@ -12,6 +12,11 @@ module "eks" {
   cluster_encryption_config = {}
   create_cloudwatch_log_group = false
 
+  data "aws_iam_openid_connect_provider" "eks" {
+  url = "https://oidc.eks.eu-north-1.amazonaws.com/id/0AB16D3145B3815763B85DC319BEB30A"
+
+}
+
 
 #  cloudwatch_log_group_tags = {}
 
