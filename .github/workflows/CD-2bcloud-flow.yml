@@ -1,6 +1,5 @@
 #  CD Flow - hello-flask-app Deployment to 2bcloud EKS 
 name: CD Flow Deployment hello-flask-app to EKS 
-
 on:
   # uncomment the following sectin in case you want automatically deployment after CI workflow
    # workflow_run:
@@ -20,8 +19,8 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
-  DEVELEAP_ECR           : ${{ secrets.2BCLOUD_AWS_ECR_REGISTRY }}
-  # IMAGE_TAG              : ${{ github.sha }}
+  EKS-NAME               : "flask-eks-cluster"
+   
 jobs:
   
   build:
@@ -69,7 +68,7 @@ jobs:
    
     # Update .kube/config file with cluster details
     - name: Update kube config
-      run: aws eks update-kubeconfig --name ${{ secrets.2BCLOUD_EKS_NAME }} --region $AWS_REGION
+      run: aws eks update-kubeconfig --name $EKS-NAME --region $AWS_REGION
       
     # Create Namespace if it doesn't exist and delete old deployment
     - name: Create Namespace if it doesn't exist
@@ -98,6 +97,6 @@ jobs:
       with:
         exec: helm upgrade --install hello-flask-app helm-chart/hello-flask-app/ --cleanup-on-fail --namespace hello-flask-app --wait
 
-    - name: Print Success Message for Deploy hello-flask-app to Develeap EKS  job finish
+    - name: Print Success Message for Deploy hello-flask-app
       run : echo "Deployment hello-flask-app to 2bcloud EKS with helm   FINISHED SUCCESSFULLY!"
       
