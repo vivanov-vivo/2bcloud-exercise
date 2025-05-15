@@ -1,22 +1,34 @@
-# Use an official lightweight Python image
+# Use an official slim Python image
 FROM python:3.10-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Set environment variables to improve Python behavior in containers
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_APP=hello-flask-app.py \
+    FLASK_RUN_HOST=0.0.0.0 \
+    FLASK_RUN_PORT=5000
 
-# Set working directory
+# Set a working directory
 WORKDIR /webapp
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install OS-level dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the rest of the application code
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code
 COPY hello-flask-app.py .
 
-# Expose port 5000 for the Flask app
+# Expose Flask default port
 EXPOSE 5000
 
-# Run the app
-CMD ["python", "hello-flask-app.py"]
+# Health check support (optional for Docker/ECS)
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:5000/healthz || exit 1
+
+# Use Flask's CLI for better dev/ops integration
+CMD ["flask", "run"]
