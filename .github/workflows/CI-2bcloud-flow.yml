@@ -17,7 +17,7 @@ env:
   AWS_REGION_NAME        : "eu-north-1"
   ECR                    : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
   APP_NAME               : "hello-flask-app"
-  IMAGE_NAME             : $ECR/$APP_NAME
+  IMAGE_NAME             : "$ECR/$APP_NAME"
   IMAGE_TAG              : ${{ github.sha }}
 jobs:
   build-docker-image:
