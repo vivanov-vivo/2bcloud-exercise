@@ -9,7 +9,7 @@ resource "aws_ecr_repository" "ecr" {
   }
   tags = var.tags
 }
-resource "aws_ecr_repository" "ecr" {
+resource "aws_ecr_repository" "ecr1" {
   name                 = var.ecr-name[1]
   image_tag_mutability = var.image_mutability
   encryption_configuration {
