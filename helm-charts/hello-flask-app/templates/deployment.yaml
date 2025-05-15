@@ -12,6 +12,7 @@ spec:
       labels:
         app: {{ include "hello-flask-app.name" . }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name | default "default" }}
       containers:
         - name: flask-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -32,4 +33,8 @@ spec:
             periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
+          securityContext:
+            runAsUser: 1000
+            runAsNonRoot: true
+      securityContext:
+        fsGroup: 1000
