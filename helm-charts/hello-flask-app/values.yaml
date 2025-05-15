@@ -1,0 +1,27 @@
+replicaCount: 2
+
+image:
+  repository: 2bcloudrepository/hello-flask-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer   # Creates a public AWS ELB for this service
+  port: 5000
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
