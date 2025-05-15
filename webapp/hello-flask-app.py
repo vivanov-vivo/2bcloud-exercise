@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 # Root endpoint
 @app.route('/')
-def hello():
+def home():
     return "Hello, World!"
 
 # Health check endpoint
