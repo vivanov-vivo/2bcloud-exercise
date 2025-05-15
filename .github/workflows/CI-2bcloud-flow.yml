@@ -57,8 +57,7 @@ jobs:
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
-          IMAGE_NAME="$ECR/$APP_NAME"
-          docker build -t $IMAGE_NAME:$APP_NAME_latest -t $IMAGE_NAME:$APP_NAME_$IMAGE_TAG .
+          docker build -t $ECR:$APP_NAME_latest -t $ECR:$APP_NAME_$IMAGE_TAG .
           
           echo "================================="
           echo "                                 "
@@ -68,8 +67,8 @@ jobs:
           echo "                                 "
           echo "================================="
           
-          docker push $IMAGE_NAME:$APP_NAME_$IMAGE_TAG 
-          docker push $IMAGE_NAME:$APP_NAME_latest
+          docker push $ECR:$APP_NAME_$IMAGE_TAG 
+          docker push $ECR:$APP_NAME_latest
 
     - name: Output short commit SHA
       env:       
