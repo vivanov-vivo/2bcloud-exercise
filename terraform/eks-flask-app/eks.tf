@@ -48,7 +48,7 @@ module "eks" {
   }
   cluster_addons = {
     coredns = {}
-    eks-pod-identity-agent = {}
+   # eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni                = {}
   }
@@ -69,6 +69,6 @@ module "eks" {
     Project = "2bcloud" 
   }
 }
-data "aws_iam_openid_connect_provider" "eks" {
-  url = "https://oidc.eks.eu-north-1.amazonaws.com/id/0AB16D3145B3815763B85DC319BEB30A"
-}
+#data "aws_iam_openid_connect_provider" "eks" {
+#  url = "https://oidc.eks.eu-north-1.amazonaws.com/id/0AB16D3145B3815763B85DC319BEB30A"
+#}
