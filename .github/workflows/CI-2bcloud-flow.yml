@@ -15,7 +15,8 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
-  ECR           : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
+  ECR                    : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
+  APP_NAME               : "hello-flask-app"
   IMAGE_TAG              : ${{ github.sha }}
 jobs:
   build-docker-image:
@@ -56,7 +57,7 @@ jobs:
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
-          docker build -t $ECR:hello-flask-app_latest -t $ECR:hello-flask-app_$IMAGE_TAG .
+          docker build -t $ECR/$APP_NAME:$APP_NAME_latest -t $ECR/$APP_NAME:$APP_NAME_$IMAGE_TAG .
           
           echo "================================="
           echo "                                 "
@@ -66,8 +67,8 @@ jobs:
           echo "                                 "
           echo "================================="
           
-          docker push $ECR:hello-flask-app_$IMAGE_TAG 
-          docker push $ECR:hello-flask-app_latest
+          docker push $ECR/$APP_NAME:$APP_NAME_$IMAGE_TAG 
+          docker push $ECR:$APP_NAME_latest
 
     - name: Output short commit SHA
       env:       
