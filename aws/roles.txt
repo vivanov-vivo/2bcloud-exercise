@@ -1,0 +1,36 @@
+ aws iam create-role \
+  --role-name vi-eks-nodegroup-role \
+  --assume-role-policy-document file://eks-nodegroup-trust-policy.json
+
+aws iam attach-role-policy \
+  --role-name vi-eks-nodegroup-role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+
+aws iam attach-role-policy \
+  --role-name vi-eks-nodegroup-role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+aws iam attach-role-policy \
+  --role-name vi-eks-nodegroup-role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+
+aws iam get-role --role-name vi-eks-nodegroup-role
+aws iam list-attached-role-policies --role-name vi-eks-nodegroup-role
+aws iam list-role-policies --role-name vi-eks-nodegroup-role
+
+
+aws iam create-role \
+  --role-name vi-eks-cluster-role \
+  --assume-role-policy-document file://eks-cluster-trust-policy.json
+
+aws iam attach-role-policy \
+  --role-name vi-eks-cluster-role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+
+aws iam attach-role-policy \
+  --role-name vi-eks-cluster-role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+
+aws iam get-role --role-name vi-eks-cluster-role
+aws iam list-attached-role-policies --role-name vi-eks-cluster-role
+aws iam list-role-policies --role-name vi-eks-cluster-role
