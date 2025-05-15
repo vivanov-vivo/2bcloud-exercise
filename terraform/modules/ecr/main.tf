@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "ecr" {
-  name                 = 2bcloud-ecr
+  name                 = "2bcloud-ecr"
   image_tag_mutability = var.image_mutability
   encryption_configuration {
     encryption_type = var.encrypt_type
