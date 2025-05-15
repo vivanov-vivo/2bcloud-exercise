@@ -14,6 +14,12 @@ aws iam attach-role-policy \
   --role-name vi-eks-nodegroup-role \
   --policy-arn arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
 
+aws iam put-role-policy \
+  --role-name vi-eks-nodegroup-role \
+  --policy-name AllowLaunchTemplateAccess \
+  --policy-document file://launch-template-access-policy.json
+
+
 aws iam get-role --role-name vi-eks-nodegroup-role
 aws iam list-attached-role-policies --role-name vi-eks-nodegroup-role
 aws iam list-role-policies --role-name vi-eks-nodegroup-role
