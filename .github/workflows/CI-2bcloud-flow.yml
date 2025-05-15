@@ -15,9 +15,7 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
-  ECR                    : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
-  APP_NAME               : "hello-flask-app"
-  IMAGE_TAG              : ${{ github.sha }}
+ 
 jobs:
   build-docker-image:
     name: Build and Push Docker Image
@@ -34,7 +32,7 @@ jobs:
       
     # Checkout the code from the repository
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # Configure AWS credentials
     - name: Configure AWS credentials
@@ -59,8 +57,8 @@ jobs:
         ECR      : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
         APP_NAME : "hello-flask-app"
       run: |
-          echo $ECR:$APP_NAME_latest
-          echo $ECR:$APP_NAME_$IMAGE_TAG 
+          echo $APP_NAME
+          echo $APP_NAME_$IMAGE_TAG 
           docker build -t $ECR:hello-flask-app_latest -t $ECR:hello-flask-app_$IMAGE_TAG .
           
           echo "================================="
