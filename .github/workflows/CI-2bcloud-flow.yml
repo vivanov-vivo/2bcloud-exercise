@@ -57,6 +57,8 @@ jobs:
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
+          echo $ECR:$APP_NAME_latest
+          echo $ECR:$APP_NAME_$IMAGE_TAG 
           docker build -t $ECR:$APP_NAME_latest -t $ECR:$APP_NAME_$IMAGE_TAG .
           
           echo "================================="
