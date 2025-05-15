@@ -1,5 +1,5 @@
-name: CI 2BCloud Pipeline with Docker 
-
+# CI 2BCloud Flow for create and push Docker image of hello-flask-app
+name: CI Flow Create Docker image
 on:
 ## uncomment the following to run the workflow on commit
   # push:
