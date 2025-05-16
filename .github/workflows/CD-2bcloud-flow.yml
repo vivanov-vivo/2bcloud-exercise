@@ -19,7 +19,8 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
-  EKS-NAME               : "flask-eks-cluster"
+  EKS_NAME               : "vi-eks-cluster"
+  APP_NAME               : "hello-flask-app"
    
 jobs:
   
@@ -68,13 +69,13 @@ jobs:
    
     # Update .kube/config file with cluster details
     - name: Update kube config
-      run: aws eks update-kubeconfig --name $EKS-NAME --region $AWS_REGION
+      run: aws eks update-kubeconfig --name $EKS_NAME --region $AWS_REGION
       
     # Create Namespace if it doesn't exist and delete old deployment
     - name: Create Namespace if it doesn't exist
       run: |
-        kubectl get namespace hello-flask-app || kubectl create namespace hello-flask-app
-        kubectl delete deployment hello-flask-app -n hello-flask-app --ignore-not-found
+        kubectl get namespace $APP_NAME || kubectl create namespace $APP_NAME
+        kubectl delete deployment $APP_NAME -n $APP_NAME --ignore-not-found
 
     # Update Image tag in values file
     - name: Update values.yaml with real Image 
@@ -82,20 +83,20 @@ jobs:
         IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         REPO     : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
       run: |
-         sed -i "s|latest|$IMAGE_TAG|g" helm-charts/hello-flask-app/values.yaml
-         sed -i "s|2bcloudrepository|$REPO|g" helm-charts/hello-flask-app/values.yaml
+         sed -i "s|latest|$IMAGE_TAG|g" helm-charts/$APP_NAME/values.yaml
+         sed -i "s|2bcloudrepository|$REPO|g" helm-charts/$APP_NAME/values.yaml
          
 
    # Validate the Helm chart before deployment
     - name: Validate Helm chart (lint)
       run: |
-        helm lint ./helm-charts/hello-flask-app
+        helm lint ./helm-charts/$APP_NAME
         
     # Deploy hello-flask-app helm chart
     - name: Deploy helm chart
       uses: WyriHaximus/github-action-helm3@v3
       with:
-        exec: helm upgrade --install hello-flask-app helm-charts/hello-flask-app/ --cleanup-on-fail --namespace hello-flask-app --wait
+        exec: helm upgrade --install $APP_NAME helm-charts/$APP_NAME/ --cleanup-on-fail --namespace $APP_NAME --wait
 
     - name: Wait for service external IP
       id: wait-for-service
