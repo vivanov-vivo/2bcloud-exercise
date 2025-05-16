@@ -107,7 +107,8 @@ Hello, World! 👋
 Welcome to your Flask app running in a container or on EKS!
 ```
 
-Styled with a clean, minimal CSS using Arial font and centered layout.
+![hello-world](images/hello-world.png)
+![health](images/health.png)
 
 ---
 
