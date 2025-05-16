@@ -127,31 +127,62 @@ Styled with a clean, minimal CSS using Arial font and centered layout.
 
 ### Provisioning Steps
 
-Provisioning is split into multiple Terraform modules:
+Provisioning is split into multiple Terraform modules. You can run the steps manually **or trigger the corresponding GitHub Actions workflows** located in `.github/workflows/`.
 
-#### 1. S3 Backend for Terraform State
+---
+
+#### 1. 🗃️ S3 Backend for Terraform State
+
+**Manual Steps:**
 
 ```bash
 cd terraform/tf-state-s3
 terraform init
 terraform apply
 ```
-#### 2. ECR Registry
+
+**✅ GitHub Actions Alternative:**
+You can run the automated provisioning via the workflow file:
+`.github/workflows/terraform-tf-state-s3.yml`
+
+---
+
+#### 2. 📦 ECR Registry
+
+**Manual Steps:**
 
 ```bash
 cd terraform/ecr
 terraform init
 terraform apply
 ```
-#### 3. ESK cluster
+
+**✅ GitHub Actions Alternative:**
+Trigger the provisioning using the pipeline:
+`.github/workflows/terraform-ecr.yml`
+
+---
+
+#### 3. ☸️ EKS Cluster
+
+**Manual Steps:**
 
 ```bash
-# Cluster
 cd terraform/eks-flask-app
 terraform init
 terraform apply
-
 ```
+
+**✅ GitHub Actions Alternative:**
+Use the workflow to provision or clean up the EKS cluster and related resources:
+`.github/workflows/terraform-eks-nodegroup.yml`
+
+> 🛠 **This pipeline supports two modes:**
+>
+> * `apply` – Provisions the EKS cluster and node group
+> * `destroy` – **Tears down** the EKS resources to clean up your environment when no longer needed
+
+> You can trigger the pipeline with a custom input or environment variable to select the desired action (`apply` or `destroy`).
 > Ensure your IAM roles and policies (in `/aws`) are created or referenced appropriately.
 
 ---
