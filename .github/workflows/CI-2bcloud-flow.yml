@@ -15,7 +15,7 @@ env:
   AWS_SECRET_ACCESS_KEY  : ${{ secrets.VI_AWS_SECRET_KEY }}
   AWS_DEFAULT_REGION     : "eu-north-1"
   AWS_REGION_NAME        : "eu-north-1"
- 
+  APP_NAME               : "hello-flask-app"
 jobs:
   build-docker-image:
     name: Build and Push Docker Image
@@ -55,7 +55,7 @@ jobs:
       env:       
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
         ECR      : ${{ secrets.BCLOUD_AWS_ECR_REGISTRY }}
-        APP_NAME : "hello-flask-app"
+        
       run: |
           echo $APP_NAME
           echo $APP_NAME_$IMAGE_TAG 
