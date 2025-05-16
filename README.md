@@ -38,7 +38,8 @@ This repository contains infrastructure code, CI/CD pipeline configurations, Hel
 │
 ├── images/
 │   ├── health.png
-│   └── hello-world.png
+│   ├── hello-world.png
+│   └── secrets.png
 │
 ├── terraform/
 │   ├── ecr/
@@ -131,7 +132,8 @@ Welcome to your Flask app running in a container or on EKS!
 ### Provisioning Steps
 
 Provisioning is split into multiple Terraform modules. You can run the steps manually **or trigger the corresponding GitHub Actions workflows** located in `.github/workflows/`.
-
+> Secrets like AWS credentials and ECR repository must be stored in GitHub Actions Secrets.
+![secrets](images/secrets.png)
 ---
 
 #### 1. 🗃️ S3 Backend for Terraform State
@@ -238,13 +240,14 @@ After successful deployment:
 
 ## 🛠 Key Commands & Scripts
 
-| Task               | Command / Path                                         |
-| ------------------ | ------------------------------------------------------ |
-| Init Terraform     | `terraform init`                                       |
-| Apply Terraform    | `terraform apply`                                      |
-| Build Docker image | `docker build -t hello-flask .`                        |
-| Helm deployment    | `helm install hello-app ./helm-charts/hello-flask-app` |
-| Check pods         | `kubectl get pods`                                     |
+| Task               | Command / Path                                               |
+| ------------------ | ------------------------------------------------------------ |
+| AWS CLI Configure  | `aws configure`                                             |
+| Init Terraform     | `terraform init`                                             |
+| Apply Terraform    | `terraform apply`                                            |
+| Build Docker image | `docker build -t hello-flask-app .`                          |
+| Helm deployment    | `helm install hello-flask-app ./helm-charts/hello-flask-app` |
+| Check pods         | `kubectl get pods`                                           |
 
 ---
 ---
