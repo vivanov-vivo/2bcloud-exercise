@@ -24,7 +24,7 @@ This repository contains infrastructure code, CI/CD pipeline configurations, Hel
 │   ├── eks-nodegroup-trust-policy.json
 │   ├── launch-template-access-policy.json
 │   ├── node-role-trust-relationship.json
-│   └── roles.txt
+│   └── aws-roles.md
 │
 ├── helm-charts/
 │   └── hello-flask-app/
@@ -35,6 +35,10 @@ This repository contains infrastructure code, CI/CD pipeline configurations, Hel
 │           ├── deployment.yaml
 │           ├── ingress.yaml_notrun
 │           └── service.yaml
+│
+├── images/
+│   ├── health.png
+│   └── hello-world.png
 │
 ├── terraform/
 │   ├── ecr/
