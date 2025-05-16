@@ -69,9 +69,6 @@ This repository contains infrastructure code, CI/CD pipeline configurations, Hel
     ├── hello-flask-app.py
     └── requirements.txt
 ```
----
-
-Absolutely! Here's a clean and descriptive **"🧩 Application Overview"** section you can add to your `README.md`, tailored to your Flask app:
 
 ---
 
@@ -197,10 +194,10 @@ CI/CD is configured via GitHub Actions:
 
 ### Triggering the pipeline
 
-1. **CI Pipeline** runs on push to `main` and runs unit tests, Docker build, etc.
-2. **CD Pipeline** handles deployment to EKS using Helm.
+1. **CI Pipeline** runs on push to `master` on webapp folder or on CI-2bcloud-flow.yml  and runs Docker build, pushes the ECR repository.
+2. **CD Pipeline** handles deployment to EKS using Helm, has an option to deploy image by tag.It can be easy modified to be started once CI pipeline is completed successfully, use the comment in pipeline.
 
-> Secrets like AWS credentials must be stored in GitHub Actions Secrets.
+> Secrets like AWS credentials and ECR repository must be stored in GitHub Actions Secrets.
 
 ---
 
