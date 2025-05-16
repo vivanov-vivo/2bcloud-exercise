@@ -126,6 +126,7 @@ Welcome to your Flask app running in a container or on EKS!
 - kubectl installed and configured
 - Docker
 - Helm
+- Ensure your IAM roles and policies (in /aws) are created or referenced appropriately.
 
 ### Provisioning Steps
 
@@ -185,7 +186,6 @@ Use the workflow to provision or clean up the EKS cluster and related resources:
 > * `destroy` – **Tears down** the EKS resources to clean up your environment when no longer needed
 
 > You can trigger the pipeline with a custom input or environment variable to select the desired action (`apply` or `destroy`).
-> Ensure your IAM roles and policies (in `/aws`) are created or referenced appropriately.
 
 ---
 
