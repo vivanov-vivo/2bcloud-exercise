@@ -71,6 +71,50 @@ This repository contains infrastructure code, CI/CD pipeline configurations, Hel
 ```
 ---
 
+Absolutely! Here's a clean and descriptive **"🧩 Application Overview"** section you can add to your `README.md`, tailored to your Flask app:
+
+---
+
+## 🧩 Application Overview
+
+This project includes a lightweight **Flask web application** designed to run in a Docker container and deploy seamlessly on Kubernetes (EKS). It serves as a simple demo or starting point for testing CI/CD pipelines, Helm deployments, and infrastructure provisioning workflows.
+
+### ✨ Features
+
+* **Web Interface**:
+  Renders a friendly HTML page at the root (`/`) with a welcome message.
+
+* **Health Check Endpoint**:
+  Returns a JSON response at `/healthz` for service monitoring and readiness/liveness probes.
+
+* **Container & Cloud Ready**:
+  Designed to run in a Docker container and deployable to Kubernetes via Helm.
+
+---
+
+### 📌 Endpoints
+
+| Endpoint   | Method | Description                                    |
+| ---------- | ------ | ---------------------------------------------- |
+| `/`        | GET    | Displays a styled "Hello, World!" page         |
+| `/healthz` | GET    | Returns `{ "status": "ok" }` for health checks |
+
+---
+
+### 🖼️ UI Preview
+
+> Here's what the root page looks like:
+
+```
+Hello, World! 👋  
+Welcome to your Flask app running in a container or on EKS!
+```
+
+Styled with a clean, minimal CSS using Arial font and centered layout.
+
+---
+
+
 ## 📦 Infrastructure Provisioning
 
 ### Prerequisites
